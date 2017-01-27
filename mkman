@@ -1,0 +1,32 @@
+#!/usr/bin/latino
+
+funcion menu(argc, argv)
+   si argc != 2
+      imprimirf("%s\n%s\n",
+      "ERROR: necesita un archivo para escribir en un argumento de esta forma:'archivo'",
+      "No incluyas la extensión, el script te lo hará por automatico")
+      retornar 0
+   fin
+   mientras (1)
+      texto = leer()
+      si texto ~= "^\[" && texto ~= "\]$"
+         texto = cadena.match(texto, "\[(.*)\]")
+         archivo.copiar(argv[1], cadena.formato(".SH %s%c", texto[0][1], 10))
+      osi cadena.match(texto, "(.*)_(.*)_(.*)")
+         texto = cadena.match(texto, "(.*)_(.*)_(.*)")
+         len = lista.longitud(texto[0])-1
+         elegir(len)
+            caso 1: archivo.copiar(argv[1], cadena.formato("\fB%s\fR%c", texto[0][1], 10))
+            caso 2: archivo.copiar(argv[1], cadena.formato("%s\fB%s\fR%c", texto[0][1], texto[0][2], 10))
+            caso 3: archivo.copiar(argv[1], cadena.formato("%s\fB%s\fR%s%c", texto[0][1], texto[0][2], texto[0][3], 10))
+         fin
+      osi cadena.longitud(texto) == 0
+         archivo.copiar(argv[1], cadena.formato(".br%c", 10))
+      osi cadena.longitud(texto) == " "
+         archivo.copiar(argv[1], cadena.formato(".PP%c", 10))
+      sino
+         archivo.copiar(argv[1], texto..cadena.formato("%c.br%c", 10, 10))
+      fin
+   fin
+
+fin
